@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我是奶龙</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        .text {
+            font-size: 10vw;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            }
+            to {
+                text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="text">我是奶龙</div>
+    
+    <audio id="audioPlayer" autoplay loop>
+        <source src="a.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 阻止页面关闭
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        // 设置并播放音频
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('audioPlayer');
+            
+            // 设置最大音量
+            audio.volume = 1.0;
+            
+            // 尝试自动播放（有些浏览器可能会阻止）
+            audio.play().catch(e => {
+                // 如果自动播放被阻止，显示交互提示
+                alert('请点击页面任意处以播放音频！');
+                document.body.addEventListener('click', function() {
+                    audio.play();
+                }, { once: true });
+            });
+            
+            // 防止音频暂停
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    audio.play();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
