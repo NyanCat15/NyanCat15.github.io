@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我是奶龙</title>
+    <title>小惊喜</title>
     <style>
         body {
             margin: 0;
@@ -17,6 +17,7 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             user-select: none;
+            cursor: pointer;
         }
         
         .text {
@@ -38,9 +39,9 @@
     </style>
 </head>
 <body>
-    <div class="text">我是奶龙</div>
+    <div class="text" id="message">接受小惊喜，声音一定要调到最大</div>
     
-    <audio id="audioPlayer" autoplay loop>
+    <audio id="audioPlayer" loop>
         <source src="a.mp3" type="audio/mpeg">
     </audio>
 
@@ -54,22 +55,30 @@
         // 设置并播放音频
         document.addEventListener('DOMContentLoaded', function() {
             const audio = document.getElementById('audioPlayer');
+            const message = document.getElementById('message');
             
             // 设置最大音量
             audio.volume = 1.0;
             
-            // 尝试自动播放（有些浏览器可能会阻止）
-            audio.play().catch(e => {
-                // 如果自动播放被阻止，显示交互提示
-                alert('请点击页面任意处以播放音频！');
-                document.body.addEventListener('click', function() {
-                    audio.play();
-                }, { once: true });
-            });
+            // 点击页面播放音频
+            function playAudio() {
+                audio.play()
+                    .then(() => {
+                        message.textContent = "我是奶龙";
+                    })
+                    .catch(e => {
+                        alert("点击任意地方接受");
+                        document.body.addEventListener('click', playAudio, { once: true });
+                    });
+            }
+            
+            // 初始提示
+            alert("点击任意地方接受");
+            document.body.addEventListener('click', playAudio, { once: true });
             
             // 防止音频暂停
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden) {
+                if (!document.hidden && message.textContent === "我是奶龙") {
                     audio.play();
                 }
             });
